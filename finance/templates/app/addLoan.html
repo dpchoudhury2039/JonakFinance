@@ -1,0 +1,200 @@
+{% extends "app/base_site.html" %}
+{% block title %} Add Loan {% endblock title %}
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="page-title">
+        <div class="title_left">
+          <h3>Add Loan</h3>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_content">
+              <br />
+              <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Loaner's Name <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <select class="form-control" required="required" name="loaner_id">
+                      <option value="">Choose option</option>
+                      {% for person in persons %}
+                        <option value="{{person.id}}">{{person.first_name}} {{person.last_name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="text" class="form-control has-feedback-left" id="single_cal1" placeholder="Date" aria-describedby="inputSuccess2Status" name="date">
+                    <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                    <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="amount">Amount <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="number" id="amount" name="amount" step=".01" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="interest">Interest % <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="number" id="interest" name="interest" step=".01" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Premium Mode <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <select class="form-control" required="required" id="pMode" name="pMode">
+                      <option value="">Choose option</option>
+                      <option value="Daily">Daily</option>
+                      <option value="Weekly">Weekly</option>
+                      <option value="Fortnightly">Fortnightly</option>
+                      <option value="Monthly">Monthly</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="duration">Duration <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="number" id="duration" name="duration" step=".01" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="installment">Installment <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="number" id="installment" name="installment" step=".01" required="required" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="outstanding">Outstanding <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="number" id="outstanding" name="outstanding" step=".01" required="required" class="form-control col-md-7 col-xs-12" readonly>
+                  </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                    <a href="{% url 'finance:loans'%}" class="btn btn-info">Cancel</a>
+  		            <button class="btn btn-primary" type="reset">Reset</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block addtionalJavascripts %}
+<script>
+
+function getInstallment(pMode, duration, interest, amount) {
+  if(pMode == "Daily")
+    {
+       var month = parseFloat((duration/30).toFixed(2));
+       var total_interest = parseFloat((amount * interest * month)/100);
+       var total_sum = amount + total_interest;
+       var installment = (total_sum / duration).toFixed(2);
+    }
+    else if(pMode == "Weekly")
+    {
+       var month = parseFloat(((duration * 7)/30).toFixed(2));
+       var total_interest = parseFloat((amount * interest * month)/100);
+       var total_sum = amount + total_interest;
+       var installment = (total_sum / duration).toFixed(2);
+    }
+    else if(pMode == "Fortnightly")
+    {
+       var month = parseFloat(((duration * 15)/30).toFixed(2));
+       var total_interest = parseFloat((amount * interest * month)/100);
+       var total_sum = amount + total_interest;
+       var installment = (total_sum / duration).toFixed(2);
+    }
+    else if(pMode == "Monthly")
+    {
+       var month = parseInt(duration);
+       var total_interest = parseFloat((amount * interest * month)/100);
+       var total_sum = amount + total_interest;
+       var installment = (total_sum / duration).toFixed(2);
+    }
+   return installment
+}
+$("#amount").keyup(function(){
+  if($('#interest').val() != "" && $('#pMode').val() != "" && $('#duration').val() != "")
+  {
+       var pMode = $('#pMode').val();
+       var duration = $('#duration').val();
+       var interest = $('#interest').val();
+       var amount = parseFloat($('#amount').val());
+       var installment = getInstallment(pMode, duration, interest, amount);
+       $('#installment').val(installment);
+
+       var outstanding = installment * duration
+       $('#outstanding').val(Math.round(outstanding));
+  }
+});
+
+$("#interest").keyup(function(){
+  if($('#amount').val() != "" && $('#pMode').val() != "" && $('#duration').val() != "")
+  {
+       var pMode = $('#pMode').val();
+       var duration = $('#duration').val();
+       var interest = $('#interest').val();
+       var amount = parseFloat($('#amount').val());
+       var installment = getInstallment(pMode, duration, interest, amount);
+       $('#installment').val(installment);
+
+       var outstanding = installment * duration
+       $('#outstanding').val(Math.round(outstanding));
+  }
+});
+
+$("#pMode").change(function(){
+  if($('#amount').val() != "" && $('#duration').val() != "" && $('#pMode').val() != "" && $('#interest').val() != "")
+  {
+       var pMode = $('#pMode').val();
+       var duration = $('#duration').val();
+       var interest = $('#interest').val();
+       var amount = parseFloat($('#amount').val());
+       var installment = getInstallment(pMode, duration, interest, amount);
+       $('#installment').val(installment);
+
+       var outstanding = installment * duration
+       $('#outstanding').val(Math.round(outstanding));
+  }
+});
+
+$("#duration").keyup(function(){
+  if($('#amount').val() != "" && $('#pMode').val() != "" && $('#interest').val() != "")
+  {
+       var pMode = $('#pMode').val();
+       var duration = $('#duration').val();
+       var interest = $('#interest').val();
+       var amount = parseFloat($('#amount').val());
+       var installment = getInstallment(pMode, duration, interest, amount);
+       $('#installment').val(installment);
+
+       var outstanding = installment * duration
+       $('#outstanding').val(Math.round(outstanding));
+  }
+});
+</script>
+{% endblock %}
