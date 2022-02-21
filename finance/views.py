@@ -100,7 +100,6 @@ class AddDipositor(TemplateView):
     def post(self, request):
         dipositorID = request.POST.get('dipositorID')
         date = request.POST.get('date')
-        amount = request.POST.get('amount')
         interest = request.POST.get('interest')
         pMode = request.POST.get('pMode')
         duration = request.POST.get('duration')
@@ -109,7 +108,7 @@ class AddDipositor(TemplateView):
         date = DT.datetime.strptime(date, "%m/%d/%Y")
         account_id = random.randint(100000, 999999)
         person_obj = Person.objects.get(id = dipositorID)
-        Diposit_obj = Diposit.objects.create(account_id=account_id, dipositorName=person_obj, date = date, amount=amount, interest=interest,
+        Diposit_obj = Diposit.objects.create(account_id=account_id, dipositorName=person_obj, date = date, interest=interest,
                                pMode=pMode, duration=duration, premium=premium)
 
         today = DT.date.today()

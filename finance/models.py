@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+import datetime as DT
 
 ROLE_CHOICES = (
     ('Staff', 'Staff'),
@@ -34,7 +34,6 @@ class Diposit(models.Model):
     account_id = models.IntegerField(blank=False, unique=True)
     date = models.DateField(blank=False, null=False)
     dipositorName = models.ForeignKey(Person, on_delete=models.CASCADE)
-    amount = models.FloatField(blank=False)
     interest = models.FloatField(blank=False)
     pMode = models.CharField(blank=False, max_length=30)
     duration = models.IntegerField(blank=False)
@@ -82,6 +81,15 @@ class LoanRecovery(models.Model):
     collectedDate = models.DateField(blank=True, null=True)
     collector = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     collectionPlace = models.CharField(blank=True, max_length=30)
+
+    @property
+    def isOverDued(self):
+        today = DT.date.today()
+        result = self.date - today
+        if result.days <0 and not self.collected:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return self.loan.loanerName.first_name + " " + self.loan.loanerName.last_name + " (" + str(
