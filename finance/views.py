@@ -46,10 +46,18 @@ class Home(TemplateView):
         totalLoanAmount = 0
         for loan in loan_obj:
             totalLoanAmount = totalLoanAmount + loan.outstanding
-        context['totalLoanAmount'] = totalLoanAmount
+
+        loan_recovery_obj = LoanRecovery.objects.filter(loan__recovered=False, collected=True)
+        installment_collection = 0
+
+        for loan_recovery in loan_recovery_obj:
+            installment_collection = installment_collection + loan_recovery.collectedAmount
+        print(totalLoanAmount)
+        print(installment_collection)
+        context['totalLoanAmount'] = totalLoanAmount - installment_collection
 
         totalDipositAmount = 0
-        PremiumCollectionRecord_obj = PremiumCollectionRecord.objects.filter(diposit__withdrawn = False, collected=True)
+        PremiumCollectionRecord_obj = PremiumCollectionRecord.objects.filter(diposit__withdrawn=False, collected=True)
         for PremiumCollectionRecord_ins in PremiumCollectionRecord_obj:
             totalDipositAmount = totalDipositAmount + PremiumCollectionRecord_ins.diposit.premium
         context['totalDipositAmount'] = totalDipositAmount
