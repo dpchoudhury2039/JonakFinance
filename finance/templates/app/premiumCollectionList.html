@@ -48,6 +48,7 @@
                     <th>Collected Date</th>
                     <th>Collector</th>
                     <th>Collected Place</th>
+                    <th>Collected Amount</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -64,6 +65,7 @@
                     <td>{% if premiumCollection.collectedDate %} {{premiumCollection.collectedDate}} {% else %} Not collected Yet {% endif %}</td>
                     <td>{% if premiumCollection.collector %} {{premiumCollection.collector.name}} {% else %} Not collected Yet {% endif %}</td>
                     <td>{% if premiumCollection.collected %} {{premiumCollection.collectionPlace}} {% else %} Not collected Yet {% endif %}</td>
+                    <td>{% if premiumCollection.collected %} {{premiumCollection.collectedAmount}} {% else %} Not collected Yet {% endif %}</td>
                     <td>{% if premiumCollection.collected %} Collected {% else %} <a class="btn btn-info" data-toggle="modal" data-target="#myModal{{premiumCollection.id}}">Collect</a> {% endif %}</td>
                   </tr>
                   <div id="myModal{{premiumCollection.id}}" class="modal fade" role="dialog">
@@ -78,12 +80,9 @@
                         <div class="modal-body">
                           <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="post" action="{% url 'finance:collect-premium'%}">
                             {% csrf_token %}
-                            <select class="form-control" required="required" name="place">
-                                <option value="Place 1">Place 1</option>
-                                <option value="Place 2">Place 2</option>
-                                <option value="Place 3">Place 3</option>
-                            </select>
+                            <input type="amount" value="{{premiumCollection.diposit.premium}}" name="amount">
                             <input type="hidden" value="{{premiumCollection.id}}" name="id">
+                            <input type="hidden" value="{{premiumCollection.diposit.place}}" name="place">
                             <div class="ln_solid"></div>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-success">Submit</button>

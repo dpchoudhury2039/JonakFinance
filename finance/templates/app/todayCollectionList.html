@@ -18,7 +18,6 @@
         <div class="title_left">
           <h3>Today's Premium Collections</h3>
           <h4>Today's Collection {{today_total_collection}}</h4>
-          <a class="btn btn-info" href="{% url 'finance:today-premium-collection-pdf' %}">Print</a>
         </div>
 
         <div class="title_right">
@@ -34,39 +33,77 @@
       </div>
 
       <div class="clearfix"></div>
+      <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#diposit">Diposit</a></li>
+        <li><a data-toggle="tab" href="#loan">Loan</a></li>
+      </ul>
 
-      <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="x_panel">
-            <div class="x_content">
-              <table id="datatable" class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Account ID</th>
-                    <th>Amount(INR)</th>
-                    <th>Collector</th>
-                    <th>Date</th>
-                    <th>Collected Amount</th>
-                    <th>Collected Place</th>
-                  </tr>
-                </thead>
+      <div class="tab-content">
+        <div id="diposit" class="tab-pane fade in active">
+          <h3>Today's Collection: {{today_premium_total_collection}}</h3>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_content">
+                  <table id="datatable" class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Account ID</th>
+                        <th>Amount(INR)</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
 
 
-                <tbody>
-                  {% for todayPremiumCollection in todayPremiumCollections %}
-                  <tr>
-                    <td>{{todayPremiumCollection.diposit.dipositorName.first_name}} {{todayPremiumCollection.diposit.dipositorName.last_name}}</td>
-                    <td>{{todayPremiumCollection.diposit.account_id}}</td>
-                    <td>{{todayPremiumCollection.diposit.premium}}</td>
-                    <td>{% if todayPremiumCollection.collector %} {{todayPremiumCollection.collector.name}} {% else %} Not collected Yet {% endif %}</td>
-                    <td>{{todayPremiumCollection.date}}</td>
-                    <td>{{todayPremiumCollection.collectedAmount}}</td>
-                    <td>{{todayPremiumCollection.collectionPlace}}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                    <tbody>
+                      {% for todayPremiumCollection in todayPremiumCollections %}
+                      <tr>
+                        <td>{{todayPremiumCollection.diposit.dipositorName.first_name}} {{todayPremiumCollection.diposit.dipositorName.last_name}}</td>
+                        <td>{{todayPremiumCollection.diposit.account_id}}</td>
+                        <td>{{todayPremiumCollection.diposit.premium}}</td>
+                        <td>{{todayPremiumCollection.date}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="loan" class="tab-pane fade">
+          <h3>Today's Collection: {{today_loan_total_collection}}</h3>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_content">
+                  <table id="datatable" class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Loan ID</th>
+                        <th>Amount(INR)</th>
+                        <th>Date</th>
+                        <th>Collector</th>
+                      </tr>
+                    </thead>
+
+
+                    <tbody>
+                      {% for TodayLoanRecovery in TodayLoanRecoverys %}
+                      <tr>
+                        <td>{{TodayLoanRecovery.loan.loanerName.first_name}} {{TodayLoanRecovery.loan.loanerName.last_name}}</td>
+                        <td>{{TodayLoanRecovery.loan.loan_id}}</td>
+                        <td>{{TodayLoanRecovery.loan.installment}}</td>
+                        <td>{{TodayLoanRecovery.date}}</td>
+                        <td>{{TodayLoanRecovery.collector.name}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>

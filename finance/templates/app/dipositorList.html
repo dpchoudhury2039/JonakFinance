@@ -44,6 +44,7 @@
                     <th>Name</th>
                     <th>Date</th>
                     <th>Account ID</th>
+                    <th>Place</th>
                     <th>Interest</th>
                     <th>Payment Mode</th>
                     <th>Duration(Month)</th>
@@ -59,6 +60,7 @@
                     <td>{{diposit.dipositorName.first_name}} {{diposit.dipositorName.last_name}}</td>
                     <td>{{diposit.date}}</td>
                     <td><a href="{% url 'finance:premium-collection-list' diposit.account_id %}" class="btn btn-info">{{diposit.account_id}} </a></td>
+                    <td>{{diposit.place}}</td>
                     <td>{{diposit.interest}}</td>
                     <td>{{diposit.pMode}}</td>
                     <td>{{diposit.duration}}</td>

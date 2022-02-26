@@ -19,8 +19,9 @@
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Dipositor Name <span class="required">*</span></label>
                   <div class="col-md-6 col-sm-9 col-xs-12">
-                    <select class="form-control" required="required" name="dipositorID">
+                    <select class="form-control" required="required" id="dipositorID" name="dipositorID">
                       <option value="">Choose option</option>
+                      <option value="addPerson">Add Person</option>
                       {% for person in persons %}
                         <option value="{{person.id}}">{{person.first_name}} {{person.last_name}}</option>
                       {% endfor %}
@@ -37,7 +38,25 @@
                     <span id="inputSuccess2Status" class="sr-only">(success)</span>
                   </div>
                 </div>
-
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Start Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <input type="text" class="form-control has-feedback-left" id="single_cal1_start_date" placeholder="Date" aria-describedby="inputSuccess2Status" name="startDate">
+                    <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                    <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Place <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-9 col-xs-12">
+                    <select class="form-control" required="required" id="place" name="place">
+                      <option value="">Choose option</option>
+                      <option value="Muktapur">Muktapur</option>
+                      <option value="Paikana">Paikana</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Interest % <span class="required">*</span>
                   </label>
@@ -169,5 +188,12 @@
 <!--       CalculatePremiumAndSum(pMode, duration, interest, amount);-->
 <!--  }-->
 <!--});-->
+
+$("#dipositorID").change(function(){
+  if($('#dipositorID').val() == "addPerson")
+  {
+    window.location = "{% url 'finance:add-person' %}";
+  }
+});
 </script>
 {% endblock %}

@@ -33,16 +33,19 @@
         <li><a><i class="fa fa-home"></i> Deposite <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="{% url 'finance:dipositors' %}">Depositor List</a></li>
+            <li><a href="{% url 'finance:add-dipositor' %}">Add Dipositor</a></li>
             <li><a href="{% url 'finance:today-premium-collection-list' %}">Today's Collection</a></li>
           </ul>
         </li>
         <li><a><i class="fa fa-edit"></i> Loan <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="{% url 'finance:loans' %}">Loan List</a></li>
+            <li><a href="{% url 'finance:add-loan' %}">Add Loan</a></li>
             <li><a href="{% url 'finance:today-loan-recovery-list' %}">Today's Collection</a></li>
           </ul>
         </li>
         <li><a href="{% url 'finance:user-list' %}"><i class="fa fa-home"></i> Users </a></li>
+        <li><a href="{% url 'finance:today-collection-list' %}"><i class="fa fa-home"></i> Today Total Collection </a></li>
       </ul>
     </div>
   </div>

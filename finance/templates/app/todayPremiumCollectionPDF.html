@@ -78,6 +78,8 @@
                   <th>Amount(INR)</th>
                   <th>Date</th>
                   <th>Collector</th>
+                  <th>Collected Amount</th>
+                  <th>Collected Place</th>
             </tr>
             </thead>
             <tbody>
@@ -88,6 +90,8 @@
                     <td>{{todayPremiumCollection.diposit.premium}}</td>
                     <td>{{todayPremiumCollection.date}}</td>
                     <td>{{todayPremiumCollection.collector.name}}</td>
+                    <td>{{todayPremiumCollection.collectedAmount}}</td>
+                    <td>{{todayPremiumCollection.collectionPlace}}</td>
                   </tr>
             {% endfor %}
             </tbody>

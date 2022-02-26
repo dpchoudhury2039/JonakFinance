@@ -24,4 +24,5 @@ urlpatterns = [
     path('loanRecovery/', RecoverLoan.as_view(), name='loan-recovery'),
     path('userList/', UserList.as_view(), name='user-list'),
     path('userTodayCollectionList/<int:user_id>/', UserTodayCollectionList.as_view(), name='user-today-collection-list'),
+    path('TodayCollectionList/', TodayCollectionList.as_view(), name='today-collection-list'),
 ]

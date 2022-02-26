@@ -47,6 +47,8 @@
                     <th>Amount(INR)</th>
                     <th>Date</th>
                     <th>Collector</th>
+                    <th>Collected Amount</th>
+                    <th>Collected Place</th>
                   </tr>
                 </thead>
 
@@ -59,6 +61,8 @@
                     <td>{{TodayLoanRecovery.loan.installment}}</td>
                     <td>{{TodayLoanRecovery.date}}</td>
                     <td>{{TodayLoanRecovery.collector.name}}</td>
+                    <td>{{TodayLoanRecovery.collectedAmount}}</td>
+                    <td>{{TodayLoanRecovery.collectionPlace}}</td>
                   </tr>
                   {% endfor %}
                 </tbody>

@@ -44,6 +44,7 @@
                     <th>Name</th>
                     <th>Loan ID</th>
                     <th>Date</th>
+                    <th>Place</th>
                     <th>Amount(INR)</th>
                     <th>Interest</th>
                     <th>Payment Mode</th>
@@ -61,6 +62,7 @@
                     <td>{{loan.loanerName.first_name}} {{loan.loanerName.last_name}}</td>
                     <td><a href="{% url 'finance:loan-recovery-list' loan.loan_id %}" class="btn btn-info">{{loan.loan_id}} </a></td>
                     <td>{{loan.date}}</td>
+                    <td>{{loan.place}}</td>
                     <td>{{loan.amount}}</td>
                     <td>{{loan.interest}}</td>
                     <td>{{loan.pMode}}</td>

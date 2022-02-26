@@ -33,6 +33,7 @@ class Person(models.Model):
 class Diposit(models.Model):
     account_id = models.IntegerField(blank=False, unique=True)
     date = models.DateField(blank=False, null=False)
+    place = models.CharField(blank=False, max_length=30)
     dipositorName = models.ForeignKey(Person, on_delete=models.CASCADE)
     interest = models.FloatField(blank=False)
     pMode = models.CharField(blank=False, max_length=30)
@@ -49,6 +50,7 @@ class PremiumCollectionRecord(models.Model):
     diposit = models.ForeignKey(Diposit, on_delete=models.CASCADE)
     date = models.DateField(blank=False)
     collected = models.BooleanField(default=False)
+    collectedAmount = models.FloatField(blank=True, null=True)
     collectedDate = models.DateField(blank=True, null=True)
     collector = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     collectionPlace = models.CharField(blank=True, max_length=30)
@@ -61,6 +63,7 @@ class PremiumCollectionRecord(models.Model):
 class Loan(models.Model):
     loan_id = models.IntegerField(blank=False, unique=True)
     date = models.DateField(blank=False, null=False)
+    place = models.CharField(blank=False, max_length=30)
     loanerName = models.ForeignKey(Person, on_delete=models.CASCADE)
     amount = models.FloatField(blank=False)
     interest = models.FloatField(blank=False)
@@ -78,6 +81,7 @@ class LoanRecovery(models.Model):
     loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
     date = models.DateField(blank=False)
     collected = models.BooleanField(default=False)
+    collectedAmount = models.FloatField(blank=True, null=True)
     collectedDate = models.DateField(blank=True, null=True)
     collector = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     collectionPlace = models.CharField(blank=True, max_length=30)

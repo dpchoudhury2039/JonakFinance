@@ -48,6 +48,7 @@
                     <th>Collected Date</th>
                     <th>Collector</th>
                     <th>Collected Place</th>
+                    <th>Collected Amount</th>
                     <th>Action</th>
                     <th>Is Overdued?</th>
                   </tr>
@@ -65,6 +66,7 @@
                     <td>{% if LoanRecovery.collectedDate %} {{LoanRecovery.collectedDate}} {% else %} Not collected Yet {% endif %}</td>
                     <td>{% if LoanRecovery.collector %} {{LoanRecovery.collector.name}} {% else %} Not collected Yet {% endif %}</td>
                     <td>{% if LoanRecovery.collected %} {{LoanRecovery.collectionPlace}} {% else %} Not collected Yet {% endif %}</td>
+                    <td>{% if LoanRecovery.collected %} {{LoanRecovery.collectedAmount}} {% else %} Not collected Yet {% endif %}</td>
                     <td>{% if LoanRecovery.collected %} Collected {% else %} <a class="btn btn-info" data-toggle="modal" data-target="#myModal{{LoanRecovery.id}}">Collect</a> {% endif %}</td>
                     <td>{%if LoanRecovery.isOverDued %} Overdued {% else %} No {% endif %}</td>
                   </tr>
@@ -80,12 +82,9 @@
                         <div class="modal-body">
                           <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="post" action="{% url 'finance:loan-recovery'%}">
                             {% csrf_token %}
-                            <select class="form-control" required="required" name="place">
-                                <option value="Place 1">Place 1</option>
-                                <option value="Place 2">Place 2</option>
-                                <option value="Place 3">Place 3</option>
-                            </select>
+                            <input type="amount" value="{{LoanRecovery.loan.installment}}" name="amount">
                             <input type="hidden" value="{{LoanRecovery.id}}" name="id">
+                            <input type="hidden" value="{{LoanRecovery.loan.place}}" name="place">
                             <div class="ln_solid"></div>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-success">Submit</button>

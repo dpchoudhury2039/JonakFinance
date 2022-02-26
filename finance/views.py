@@ -45,7 +45,7 @@ class Home(TemplateView):
         loan_obj = Loan.objects.filter(recovered=False)
         totalLoanAmount = 0
         for loan in loan_obj:
-            totalLoanAmount = totalLoanAmount + loan.amount
+            totalLoanAmount = totalLoanAmount + loan.outstanding
         context['totalLoanAmount'] = totalLoanAmount
 
         totalDipositAmount = 0
@@ -100,28 +100,30 @@ class AddDipositor(TemplateView):
     def post(self, request):
         dipositorID = request.POST.get('dipositorID')
         date = request.POST.get('date')
+        place = request.POST.get('place')
         interest = request.POST.get('interest')
         pMode = request.POST.get('pMode')
         duration = request.POST.get('duration')
         premium = request.POST.get('premium')
 
-        date = DT.datetime.strptime(date, "%m/%d/%Y")
+        date = DT.datetime.strptime(date, "%d/%m/%Y")
         account_id = random.randint(100000, 999999)
         person_obj = Person.objects.get(id = dipositorID)
-        Diposit_obj = Diposit.objects.create(account_id=account_id, dipositorName=person_obj, date = date, interest=interest,
+        Diposit_obj = Diposit.objects.create(account_id=account_id, dipositorName=person_obj, place=place, date = date, interest=interest,
                                pMode=pMode, duration=duration, premium=premium)
 
-        today = DT.date.today()
-        PremiumCollectionRecord.objects.create(diposit=Diposit_obj, date=today)
+        startDate = request.POST.get('startDate')
+        startDate = DT.datetime.strptime(startDate, "%d/%m/%Y")
+        PremiumCollectionRecord.objects.create(diposit=Diposit_obj, date=startDate)
         for i in range(1, int(duration)):
             if pMode == "Daily":
-                next_date = today + DT.timedelta(days=i)
+                next_date = startDate + DT.timedelta(days=i)
             elif pMode == "Weekly":
-                next_date = today + DT.timedelta(days=7*i)
+                next_date = startDate + DT.timedelta(days=7*i)
             elif pMode == "Fortnightly":
-                next_date = today + DT.timedelta(days=15*i)
+                next_date = startDate + DT.timedelta(days=15*i)
             elif pMode == "Monthly":
-                next_date = today + DT.timedelta(days=30*i)
+                next_date = startDate + DT.timedelta(days=30*i)
             PremiumCollectionRecord.objects.create(diposit=Diposit_obj, date=next_date)
 
         return HttpResponseRedirect(reverse('finance:dipositors'))
@@ -131,9 +133,11 @@ class CollectPremium(View):
     def post(self, request):
         id = request.POST.get('id')
         place = request.POST.get('place')
+        amount = request.POST.get('amount')
         premiumCollectionRecord_obj = PremiumCollectionRecord.objects.get(id=id)
         premiumCollectionRecord_obj.collected = True
         premiumCollectionRecord_obj.collectionPlace = place
+        premiumCollectionRecord_obj.collectedAmount = amount
         today = DT.date.today()
         premiumCollectionRecord_obj.collectedDate = today
         user_obj = User.objects.get(id=request.session['userLoggedInID'])
@@ -219,6 +223,7 @@ class AddLoan(TemplateView):
     def post(self, request):
         loaner_id = request.POST.get('loaner_id')
         date = request.POST.get('date')
+        place = request.POST.get('place')
         amount = request.POST.get('amount')
         interest = request.POST.get('interest')
         pMode = request.POST.get('pMode')
@@ -226,23 +231,24 @@ class AddLoan(TemplateView):
         installment = request.POST.get('installment')
         outstanding = request.POST.get('outstanding')
 
-        date = DT.datetime.strptime(date, "%m/%d/%Y")
+        date = DT.datetime.strptime(date, "%d/%m/%Y")
         account_id = random.randint(100000, 999999)
         person_obj = Person.objects.get(id = loaner_id)
-        loan_obj = Loan.objects.create(loan_id=account_id, date=date, loanerName=person_obj, amount=amount, interest=interest,
+        loan_obj = Loan.objects.create(loan_id=account_id, date=date, place=place, loanerName=person_obj, amount=amount, interest=interest,
                                pMode=pMode, duration=duration, installment=installment, outstanding=outstanding)
 
-        today = DT.date.today()
-        LoanRecovery.objects.create(loan=loan_obj, date=today)
+        startDate = request.POST.get('startDate')
+        startDate = DT.datetime.strptime(startDate, "%d/%m/%Y")
+        LoanRecovery.objects.create(loan=loan_obj, date=startDate)
         for i in range(1, int(duration)):
             if pMode == "Daily":
-                next_date = today + DT.timedelta(days=i)
+                next_date = startDate + DT.timedelta(days=i)
             elif pMode == "Weekly":
-                next_date = today + DT.timedelta(days=7 * i)
+                next_date = startDate + DT.timedelta(days=7 * i)
             elif pMode == "Fortnightly":
-                next_date = today + DT.timedelta(days=15 * i)
+                next_date = startDate + DT.timedelta(days=15 * i)
             elif pMode == "Monthly":
-                next_date = today + DT.timedelta(days=30 * i)
+                next_date = startDate + DT.timedelta(days=30 * i)
             LoanRecovery.objects.create(loan=loan_obj, date=next_date)
 
         return HttpResponseRedirect(reverse('finance:loans'))
@@ -297,10 +303,12 @@ class RecoverLoan(View):
     def post(self, request):
         id = request.POST.get('id')
         place = request.POST.get('place')
+        amount = request.POST.get('amount')
 
         LoanRecovery_obj = LoanRecovery.objects.get(id=id)
         LoanRecovery_obj.collected = True
         LoanRecovery_obj.collectionPlace = place
+        LoanRecovery_obj.collectedAmount = amount
         today = DT.date.today()
         LoanRecovery_obj.collectedDate = today
         user_obj = User.objects.get(id=request.session['userLoggedInID'])
@@ -340,4 +348,34 @@ class UserTodayCollectionList(ListView):
         for today_premium_collection in today_premium_collection_obj:
             today_total_collection = today_total_collection + today_premium_collection.diposit.premium
         context['today_premium_total_collection'] = today_total_collection
+        return context
+
+
+class TodayCollectionList(ListView):
+    model = LoanRecovery
+    template_name = "app/todayCollectionList.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(TodayCollectionList, self).get_context_data(**kwargs)
+
+        today = DT.date.today()
+        context['TodayLoanRecoverys'] = LoanRecovery.objects.filter(collectedDate=today)
+        today_loan_recovery_obj = LoanRecovery.objects.filter(collectedDate=today)
+        today_total_collection = 0
+        for today_loan_recovery in today_loan_recovery_obj:
+            today_total_collection = today_total_collection + today_loan_recovery.loan.installment
+        context['today_loan_total_collection'] = today_total_collection
+        today_total_loan_collection = today_total_collection
+
+
+
+        context['todayPremiumCollections'] = PremiumCollectionRecord.objects.filter(collectedDate=today)
+        today_premium_collection_obj = PremiumCollectionRecord.objects.filter(collectedDate=today)
+
+        today_total_collection = 0
+        for today_premium_collection in today_premium_collection_obj:
+            today_total_collection = today_total_collection + today_premium_collection.diposit.premium
+        context['today_premium_total_collection'] = today_total_collection
+        today_total_premium_collection = today_total_collection
+        context['today_total_collection'] = today_total_loan_collection + today_total_premium_collection
         return context
